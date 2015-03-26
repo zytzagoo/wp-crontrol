@@ -179,6 +179,9 @@ class Crontrol {
         foreach( $crons as $time=>$cron ) {
             if( isset( $cron[$hookname][$sig] ) ) {
                 $args = $cron[$hookname][$sig]['args'];
+                // Shoving a random argument to the end in order to avoid/bust the
+                // "identical event check" within `wp_schedule_single_event()`
+                $args[] = wp_rand();
 				delete_transient( 'doing_cron' );
                 wp_schedule_single_event(time()-1, $hookname, $args);
                 spawn_cron();
